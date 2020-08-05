@@ -1,15 +1,16 @@
 package com.example.demo;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class UserController {
+
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/users")
     public PagingResponse getAllUser(
@@ -40,4 +41,13 @@ public class UserController {
 //        return UsersResponse(id,"User"+id);
 //
 //    }
+
+    @PostMapping("/users")
+    public UsersResponse createNewUser(@RequestBody NewUserRequest request){
+        User user = new User();
+        user.setName(request.getName());
+        user.setAge(request.getAge());
+        user = userRepository.save(user);
+        return new UsersResponse(user.getId(),user.getName()+ user.getAge());
+    }
 }
