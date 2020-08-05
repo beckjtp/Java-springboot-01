@@ -11,23 +11,26 @@ import java.util.List;
 @RestController
 public class UserController {
 
-//    @GetMapping("/users")
-//    public List<UsersResponse>  getAllUser(){
-//        List<UsersResponse> users = new ArrayList<>();
-//        users.add(new UsersResponse(1,"User 1" ));
-//        users.add(new UsersResponse(2,"User 2"));
-////        UsersResponse[] usersResponses = new UsersResponse[2];
-////        usersResponses[0] = new UsersResponse(1, "User 1");
-////        usersResponses[1] = new UsersResponse(2, "User 2");
-//        return users;
-//    }
     @GetMapping("/users")
-    public String getAllUser
-    (@RequestParam(value = "page",required = false,defaultValue = "1")int page,
-     @RequestParam(value = "itemperpage",required = false,defaultValue = "10")int itemPerPage)
-    {
-        return "page = " + page +"itemPerPage = "+ itemPerPage;
+    public PagingResponse getAllUser(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(name = "item_per_page" ,defaultValue = "10") int itemPerPage) {
+
+        PagingResponse pagingResponse = new PagingResponse(page, itemPerPage);
+        List<UsersResponse> usersResponseList = new ArrayList<>();
+        usersResponseList.add(new UsersResponse(1, "User 1"));
+        usersResponseList.add(new UsersResponse(2, "User 2"));
+        usersResponseList.add(new UsersResponse(3, "User 3"));
+        pagingResponse.setUsersResponse(usersResponseList);
+        return pagingResponse;
     }
+//    @GetMapping("/users")
+//    public String getAllUser
+//    (@RequestParam(value = "page",required = false,defaultValue = "1")int page,
+//     @RequestParam(value = "itemperpage",required = false,defaultValue = "10")int itemPerPage)
+//    {
+//        return "page = " + page +"itemPerPage = "+ itemPerPage;
+//    }
     @GetMapping("/users/{id}")
     public UsersResponse getUserById(@PathVariable int id){
         return new UsersResponse(id,"User "+id);
